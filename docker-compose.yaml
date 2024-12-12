@@ -1,0 +1,47 @@
+
+
+services:
+
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=bddocker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+
+  backend:
+    image: backend_image
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_USER=postgres
+      - DB_HOST=host.docker.internal
+      - DB_DATABASE=bddocker
+      - DB_PASSWORD=admin123
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+
+  frontend:
+    image: frontend_image
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    deploy:
+      replicas: 2
+
+volumes:
+  postgres_data:
+
+
