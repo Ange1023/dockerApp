@@ -19,14 +19,17 @@ jobs:
 
     - name: Build Docker images
       run: |
-        docker build -t backend_image 
-        docker build -t frontend_image
+        docker build -t backend_image ./backend
+        docker build -t frontend_image ./frontend
         
     - name: Initialize Docker Swarm
       run: docker swarm init 
 
     - name: Deploy stack
       run: docker stack deploy -c docker-compose.yaml dock
+
+    - name: List container
+      run: docker ps
 
     - name: List services
       run: docker service ls
