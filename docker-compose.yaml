@@ -13,7 +13,9 @@ services:
     ports:
       - "5433:5432"
 
+
   backend:
+    image: backend_image
     build:
       context: ./backend
     ports:
@@ -27,13 +29,17 @@ services:
     depends_on:
       - db
 
+
   frontend:
+    image: frontend_image
     build:
       context: ./frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    deploy:
+      replicas: 2
 
 volumes:
   postgres_data:
