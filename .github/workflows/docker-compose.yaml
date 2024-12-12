@@ -28,6 +28,9 @@ jobs:
     - name: Deploy stack
       run: docker stack deploy -c docker-compose.yaml dock
 
+    - name: List container
+      run: docker ps
+
     - name: List services
       run: docker service ls
 
