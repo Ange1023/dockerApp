@@ -1,22 +1,38 @@
-name: Docker Compose CI/CD
+name: Docker CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main
+      - main  
 
 jobs:
-  docker-compose:
+  build:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Check out code
-      uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v2
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
 
-    - name: Build and run services
-      run: |
-        docker-compose -f docker-compose.yaml up --build -d
+      - name: Build and run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d
+
+      - name: Wait for services to start
+        run: |
+          sleep 30 
+
+      - name: Shutdown Docker Compose
+        run: |
+          docker-compose down
+
