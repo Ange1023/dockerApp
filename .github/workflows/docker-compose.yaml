@@ -1,4 +1,4 @@
-name: Docker Compose CI/CD with Docker Swarm
+name: Docker Compose CI/CD
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  docker-compose:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,12 +17,6 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v2
 
-    - name: Initialize Docker Swarm
-      run: docker swarm init
-
-    - name: Deploy stack
-      run: docker stack deploy -c docker-compose.yaml dock
-      
-    - name: List services
-      run: docker service ls
-
+    - name: Build and run services
+      run: |
+        docker-compose -f docker-compose.yaml up --build -d
