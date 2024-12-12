@@ -19,8 +19,8 @@ jobs:
 
     - name: Build Docker images
       run: |
-        docker build -t backend_image 
-        docker build -t frontend_image
+        docker build -t backend_image ./backend
+        docker build -t frontend_image ./frontend
         
     - name: Initialize Docker Swarm
       run: docker swarm init 
